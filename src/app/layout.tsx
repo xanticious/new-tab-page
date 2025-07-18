@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { DatabaseProvider } from "@/components";
 
 export const metadata: Metadata = {
   title: "New Tab Page",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <DatabaseProvider>{children}</DatabaseProvider>
+      </body>
     </html>
   );
 }
