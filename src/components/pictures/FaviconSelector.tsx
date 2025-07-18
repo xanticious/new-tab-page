@@ -11,7 +11,11 @@ interface FaviconOption {
 }
 
 interface FaviconSelectorProps {
-  onFaviconSelected: (base64: string, size: string) => void;
+  onFaviconSelected: (
+    base64OrUrl: string,
+    size: string,
+    isUrl?: boolean
+  ) => void;
   className?: string;
 }
 
@@ -51,21 +55,61 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
     });
   };
 
-  const convertImageToBase64 = (src: string): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx?.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL());
-      };
-      img.onerror = reject;
-      img.src = src;
-    });
+  const convertImageToBase64 = async (src: string): Promise<string> => {
+    try {
+      // Try to fetch the image as a blob to avoid CORS issues
+      const response = await fetch(src, {
+        mode: 'cors',
+        cache: 'default',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (fetchError) {
+      // If fetch fails due to CORS, we'll need to use a different approach
+      // For now, let's try using a CORS proxy or just return the URL
+      console.warn(
+        'Direct fetch failed, trying alternative approach:',
+        fetchError
+      );
+
+      // Try using a public CORS proxy
+      try {
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
+          src
+        )}`;
+        const response = await fetch(proxyUrl);
+
+        if (!response.ok) {
+          throw new Error(`Proxy fetch failed: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      } catch (proxyError) {
+        // If all else fails, we might need to just use the URL directly
+        // This would require changing the parent component to handle URLs instead of base64
+        throw new Error(
+          'Unable to convert image to base64 due to CORS restrictions'
+        );
+      }
+    }
   };
 
   const loadFavicons = async () => {
@@ -128,11 +172,19 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
     if (!selectedOption || selectedOption.hasError) return;
 
     try {
+      setError(null); // Clear any previous errors
       const base64 = await convertImageToBase64(selectedOption.url);
-      onFaviconSelected(base64, selectedSize);
+      onFaviconSelected(base64, selectedSize, false);
     } catch (err) {
       console.error('Failed to convert favicon to base64:', err);
-      setError('Failed to process the selected favicon');
+      console.log('Falling back to using URL directly...');
+
+      // Fallback: pass the URL directly instead of base64
+      onFaviconSelected(selectedOption.url, selectedSize, true);
+
+      setError(
+        'Note: Using direct URL due to browser security restrictions. The favicon should still work correctly.'
+      );
     }
   };
 
@@ -178,7 +230,7 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Available Sizes
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4">
               {faviconOptions.map((option) => {
                 const disabled = isOptionDisabled(option);
                 return (
@@ -225,7 +277,13 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
                         <img
                           src={option.url}
                           alt={`${option.size}×${option.size} favicon`}
-                          className="w-8 h-8 rounded border"
+                          className="rounded border"
+                          style={{
+                            width: `${Math.min(parseInt(option.size), 64)}px`,
+                            height: `${Math.min(parseInt(option.size), 64)}px`,
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                          }}
                         />
                       )}
                     </div>
