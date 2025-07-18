@@ -13,6 +13,7 @@ export { FormHeader } from "./shared/FormHeader";
 export { SearchBar } from "./shared/SearchBar";
 export { StatsCard } from "./shared/StatsCard";
 export { SearchablePictureSelector } from "./shared/SearchablePictureSelector";
+export { SearchableUrlSelector } from "./shared/SearchableUrlSelector";
 
 // Picture components
 export { ImageUpload } from "./pictures/ImageUpload";
