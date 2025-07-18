@@ -13,9 +13,9 @@ interface StatsCardProps {
 export const StatsCard: React.FC<StatsCardProps> = ({
   title,
   value,
-  bgColor = "bg-blue-50",
-  textColor = "text-blue-600",
-  borderColor = "border-blue-200",
+  bgColor = 'bg-blue-50',
+  textColor = 'text-blue-600',
+  borderColor = 'border-blue-200',
 }) => {
   return (
     <div className={`${bgColor} border ${borderColor} rounded-lg p-4`}>

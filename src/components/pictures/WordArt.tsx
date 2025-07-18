@@ -16,14 +16,26 @@ const FONTS = [
 ];
 
 const PRESET_COLORS = [
-  '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
-  '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080',
-  '#008000', '#000080', '#808080', '#C0C0C0', '#800000',
+  '#000000',
+  '#FFFFFF',
+  '#FF0000',
+  '#00FF00',
+  '#0000FF',
+  '#FFFF00',
+  '#FF00FF',
+  '#00FFFF',
+  '#FFA500',
+  '#800080',
+  '#008000',
+  '#000080',
+  '#808080',
+  '#C0C0C0',
+  '#800000',
 ];
 
 export const WordArt: React.FC<WordArtProps> = ({
   onImageGenerated,
-  className = "",
+  className = '',
 }) => {
   const [text, setText] = useState('');
   const [font, setFont] = useState(FONTS[0].value);
@@ -57,17 +69,22 @@ export const WordArt: React.FC<WordArtProps> = ({
 
     // Split text into lines
     const lines = text.split('\n');
-    
+
     // Calculate font size to fit text
     let fontSize = 48;
     ctx.font = `${fontSize}px ${font}`;
-    
+
     // Find the longest line for width calculation
-    const longestLine = lines.reduce((longest, line) => 
-      line.length > longest.length ? line : longest, '');
-    
+    const longestLine = lines.reduce(
+      (longest, line) => (line.length > longest.length ? line : longest),
+      ''
+    );
+
     // Adjust font size to fit width
-    while (fontSize > 12 && ctx.measureText(longestLine).width > canvas.width - 20) {
+    while (
+      fontSize > 12 &&
+      ctx.measureText(longestLine).width > canvas.width - 20
+    ) {
       fontSize -= 2;
       ctx.font = `${fontSize}px ${font}`;
     }
@@ -80,8 +97,9 @@ export const WordArt: React.FC<WordArtProps> = ({
     }
 
     // Draw text lines
-    const startY = canvas.height / 2 - ((lines.length - 1) * fontSize * lineHeight) / 2;
-    
+    const startY =
+      canvas.height / 2 - ((lines.length - 1) * fontSize * lineHeight) / 2;
+
     lines.forEach((line, index) => {
       const y = startY + index * fontSize * lineHeight;
       ctx.fillText(line.trim(), canvas.width / 2, y);
@@ -160,7 +178,9 @@ export const WordArt: React.FC<WordArtProps> = ({
                     type="button"
                     onClick={() => setTextColor(color)}
                     className={`w-6 h-6 rounded border-2 ${
-                      textColor === color ? 'border-gray-800' : 'border-gray-300'
+                      textColor === color
+                        ? 'border-gray-800'
+                        : 'border-gray-300'
                     }`}
                     style={{ backgroundColor: color }}
                     title={color}
@@ -188,7 +208,9 @@ export const WordArt: React.FC<WordArtProps> = ({
                     type="button"
                     onClick={() => setBackgroundColor(color)}
                     className={`w-6 h-6 rounded border-2 ${
-                      backgroundColor === color ? 'border-gray-800' : 'border-gray-300'
+                      backgroundColor === color
+                        ? 'border-gray-800'
+                        : 'border-gray-300'
                     }`}
                     style={{ backgroundColor: color }}
                     title={color}

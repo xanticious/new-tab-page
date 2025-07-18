@@ -13,33 +13,88 @@ import { Picture, CreatePicture, UpdatePicture } from '@/types';
 
 // Icons
 const PhotoIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  <svg
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+    />
   </svg>
 );
 
 const PlusIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+  <svg
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 4v16m8-8H4"
+    />
   </svg>
 );
 
 const PencilIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+  <svg
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+    />
   </svg>
 );
 
 const TrashIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  <svg
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+    />
   </svg>
 );
 
 const EyeIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  <svg
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+    />
   </svg>
 );
 
@@ -53,7 +108,15 @@ interface PictureFormData {
 }
 
 export default function PicturesManagementPage() {
-  const { pictures, isLoading, error, createPicture, updatePicture, deletePicture, refresh } = usePictures();
+  const {
+    pictures,
+    isLoading,
+    error,
+    createPicture,
+    updatePicture,
+    deletePicture,
+    refresh,
+  } = usePictures();
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPicture, setSelectedPicture] = useState<Picture | null>(null);
@@ -156,7 +219,9 @@ export default function PicturesManagementPage() {
   const handleDelete = async (picture: Picture) => {
     if (picture.readonly) return;
 
-    if (confirm(`Are you sure you want to delete the picture "${picture.name}"?`)) {
+    if (
+      confirm(`Are you sure you want to delete the picture "${picture.name}"?`)
+    ) {
       try {
         await deletePicture(picture.id);
       } catch (err) {
@@ -166,11 +231,11 @@ export default function PicturesManagementPage() {
   };
 
   const handleImageSelected = (base64: string, fileName?: string) => {
-    setFormData(prev => ({ 
-      ...prev, 
+    setFormData((prev) => ({
+      ...prev,
       base64ImageData: base64,
       // If name is empty and we have a filename, use it (without extension)
-      name: prev.name || (fileName ? fileName.replace(/\.[^/.]+$/, '') : '')
+      name: prev.name || (fileName ? fileName.replace(/\.[^/.]+$/, '') : ''),
     }));
   };
 
@@ -272,7 +337,9 @@ export default function PicturesManagementPage() {
                     <div className="text-center py-12">
                       <PhotoIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                       <div className="text-gray-500">
-                        {searchTerm ? 'No pictures found matching your search.' : 'No pictures yet.'}
+                        {searchTerm
+                          ? 'No pictures found matching your search.'
+                          : 'No pictures yet.'}
                       </div>
                       {!searchTerm && (
                         <button
@@ -365,40 +432,56 @@ export default function PicturesManagementPage() {
                   {/* Basic Information */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="name"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Picture Name *
                       </label>
                       <input
                         type="text"
                         id="name"
                         value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                           formErrors.name ? 'border-red-300' : 'border-gray-300'
                         }`}
                         placeholder="e.g., Google Favicon"
                       />
                       {formErrors.name && (
-                        <p className="mt-1 text-sm text-red-600">{formErrors.name}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {formErrors.name}
+                        </p>
                       )}
                     </div>
 
                     <div>
-                      <label htmlFor="altText" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="altText"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Alt Text *
                       </label>
                       <input
                         type="text"
                         id="altText"
                         value={formData.altText}
-                        onChange={(e) => setFormData({ ...formData, altText: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, altText: e.target.value })
+                        }
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          formErrors.altText ? 'border-red-300' : 'border-gray-300'
+                          formErrors.altText
+                            ? 'border-red-300'
+                            : 'border-gray-300'
                         }`}
                         placeholder="e.g., Google search engine logo"
                       />
                       {formErrors.altText && (
-                        <p className="mt-1 text-sm text-red-600">{formErrors.altText}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {formErrors.altText}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -410,9 +493,18 @@ export default function PicturesManagementPage() {
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {[
-                        { value: 'upload' as PictureSource, label: 'Upload File' },
-                        { value: 'favicon' as PictureSource, label: 'Website Favicon' },
-                        { value: 'wordart' as PictureSource, label: 'Text/WordArt' },
+                        {
+                          value: 'upload' as PictureSource,
+                          label: 'Upload File',
+                        },
+                        {
+                          value: 'favicon' as PictureSource,
+                          label: 'Website Favicon',
+                        },
+                        {
+                          value: 'wordart' as PictureSource,
+                          label: 'Text/WordArt',
+                        },
                       ].map((option) => (
                         <label
                           key={option.value}
@@ -427,17 +519,23 @@ export default function PicturesManagementPage() {
                             name="pictureSource"
                             value={option.value}
                             checked={pictureSource === option.value}
-                            onChange={(e) => setPictureSource(e.target.value as PictureSource)}
+                            onChange={(e) =>
+                              setPictureSource(e.target.value as PictureSource)
+                            }
                             className="sr-only"
                           />
                           <div className="text-center">
-                            <div className="font-medium text-sm">{option.label}</div>
+                            <div className="font-medium text-sm">
+                              {option.label}
+                            </div>
                           </div>
                         </label>
                       ))}
                     </div>
                     {formErrors.base64ImageData && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.base64ImageData}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {formErrors.base64ImageData}
+                      </p>
                     )}
                   </div>
 
@@ -455,9 +553,9 @@ export default function PicturesManagementPage() {
                           handleImageSelected(base64);
                           // Auto-fill alt text if empty
                           if (!formData.altText) {
-                            setFormData(prev => ({ 
-                              ...prev, 
-                              altText: `Website favicon (${size}x${size})`
+                            setFormData((prev) => ({
+                              ...prev,
+                              altText: `Website favicon (${size}x${size})`,
                             }));
                           }
                         }}
@@ -469,9 +567,11 @@ export default function PicturesManagementPage() {
                           handleImageSelected(base64);
                           // Auto-fill alt text if empty
                           if (!formData.altText) {
-                            setFormData(prev => ({ 
-                              ...prev, 
-                              altText: `Generated text image: ${formData.name || 'WordArt'}`
+                            setFormData((prev) => ({
+                              ...prev,
+                              altText: `Generated text image: ${
+                                formData.name || 'WordArt'
+                              }`,
                             }));
                           }
                         }}
@@ -486,7 +586,11 @@ export default function PicturesManagementPage() {
                       disabled={isSubmitting}
                       className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Saving...' : viewMode === 'create' ? 'Add Picture' : 'Save Changes'}
+                      {isSubmitting
+                        ? 'Saving...'
+                        : viewMode === 'create'
+                        ? 'Add Picture'
+                        : 'Save Changes'}
                     </button>
                     <button
                       type="button"
@@ -502,7 +606,9 @@ export default function PicturesManagementPage() {
 
             {viewMode === 'view' && selectedPicture && (
               <div className="max-w-2xl">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">View Picture</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                  View Picture
+                </h2>
 
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 space-y-6">
                   {/* Picture Display */}
@@ -520,21 +626,27 @@ export default function PicturesManagementPage() {
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Picture Name
                       </label>
-                      <div className="text-gray-900">{selectedPicture.name}</div>
+                      <div className="text-gray-900">
+                        {selectedPicture.name}
+                      </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Alt Text
                       </label>
-                      <div className="text-gray-900">{selectedPicture.altText}</div>
+                      <div className="text-gray-900">
+                        {selectedPicture.altText}
+                      </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         ID
                       </label>
-                      <div className="text-gray-600 font-mono text-sm">{selectedPicture.id}</div>
+                      <div className="text-gray-600 font-mono text-sm">
+                        {selectedPicture.id}
+                      </div>
                     </div>
 
                     <div>

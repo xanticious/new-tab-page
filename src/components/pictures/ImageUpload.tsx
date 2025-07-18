@@ -11,7 +11,7 @@ interface ImageUploadProps {
 export const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageSelected,
   currentImage,
-  className = "",
+  className = '',
 }) => {
   const [preview, setPreview] = useState<string | null>(currentImage || null);
   const [isDragging, setIsDragging] = useState(false);
@@ -45,7 +45,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       handleFileSelect(files[0]);
@@ -54,8 +54,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handlePaste = (e: React.ClipboardEvent) => {
     const items = Array.from(e.clipboardData.items);
-    const imageItem = items.find(item => item.type.startsWith('image/'));
-    
+    const imageItem = items.find((item) => item.type.startsWith('image/'));
+
     if (imageItem) {
       const file = imageItem.getAsFile();
       if (file) {
@@ -142,7 +142,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         )}
       </div>
-      
+
       <input
         ref={fileInputRef}
         type="file"

@@ -17,7 +17,7 @@ interface FaviconSelectorProps {
 
 export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
   onFaviconSelected,
-  className = "",
+  className = '',
 }) => {
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [faviconOptions, setFaviconOptions] = useState<FaviconOption[]>([]);
@@ -40,7 +40,9 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
     }
   };
 
-  const getImageDimensions = (src: string): Promise<{ width: number; height: number }> => {
+  const getImageDimensions = (
+    src: string
+  ): Promise<{ width: number; height: number }> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve({ width: img.width, height: img.height });
@@ -75,8 +77,8 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
     setSelectedSize('');
 
     const domain = extractDomain(websiteUrl.trim());
-    
-    const options: FaviconOption[] = sizes.map(size => ({
+
+    const options: FaviconOption[] = sizes.map((size) => ({
       size,
       url: `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`,
       isLoaded: false,
@@ -91,7 +93,7 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
         const actualSize = await getImageDimensions(options[i].url);
         options[i].actualSize = actualSize;
         options[i].isLoaded = true;
-        
+
         // If this is the largest successfully loaded size, select it by default
         if (!selectedSize && actualSize.width >= 32) {
           setSelectedSize(options[i].size);
@@ -99,14 +101,16 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
       } catch {
         options[i].hasError = true;
       }
-      
+
       // Update state after each image loads
       setFaviconOptions([...options]);
     }
 
     // If no size was auto-selected, try to select the largest working one
     if (!selectedSize) {
-      const workingOptions = options.filter(opt => opt.isLoaded && !opt.hasError);
+      const workingOptions = options.filter(
+        (opt) => opt.isLoaded && !opt.hasError
+      );
       if (workingOptions.length > 0) {
         setSelectedSize(workingOptions[workingOptions.length - 1].size);
       } else {
@@ -118,7 +122,9 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
   };
 
   const handleSelectFavicon = async () => {
-    const selectedOption = faviconOptions.find(opt => opt.size === selectedSize);
+    const selectedOption = faviconOptions.find(
+      (opt) => opt.size === selectedSize
+    );
     if (!selectedOption || selectedOption.hasError) return;
 
     try {
@@ -131,7 +137,13 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
   };
 
   const isOptionDisabled = (option: FaviconOption): boolean => {
-    return Boolean(option.hasError || (option.isLoaded && option.actualSize && option.actualSize.width <= 16 && option.size !== '16'));
+    return Boolean(
+      option.hasError ||
+        (option.isLoaded &&
+          option.actualSize &&
+          option.actualSize.width <= 16 &&
+          option.size !== '16')
+    );
   };
 
   return (
@@ -187,7 +199,9 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
                         name="favicon-size"
                         value={option.size}
                         checked={selectedSize === option.size}
-                        onChange={() => !disabled && setSelectedSize(option.size)}
+                        onChange={() =>
+                          !disabled && setSelectedSize(option.size)
+                        }
                         disabled={disabled}
                         className="text-blue-600 focus:ring-blue-500"
                       />
@@ -197,11 +211,14 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
                         </div>
                         {option.actualSize && (
                           <div className="text-xs text-gray-500">
-                            Actual: {option.actualSize.width}×{option.actualSize.height}
+                            Actual: {option.actualSize.width}×
+                            {option.actualSize.height}
                           </div>
                         )}
                         {option.hasError && (
-                          <div className="text-xs text-red-500">Failed to load</div>
+                          <div className="text-xs text-red-500">
+                            Failed to load
+                          </div>
                         )}
                       </div>
                       {option.isLoaded && !option.hasError && (

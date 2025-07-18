@@ -12,8 +12,8 @@ interface SearchBarProps {
 export const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
-  placeholder = "Search...",
-  className = "",
+  placeholder = 'Search...',
+  className = '',
 }) => {
   return (
     <div className={`relative ${className}`}>
