@@ -8,6 +8,7 @@ export interface Picture {
   id: ID;
   name: string;
   base64ImageData: string;
+  altText: string;
   readonly: boolean;
 }
 

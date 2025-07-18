@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useTags } from "@/hooks/useDatabase";
-import { BackToSettingsLink } from "@/components";
-import { Tag, CreateTag, UpdateTag, ID } from "@/types";
+import React, { useState, useEffect } from 'react';
+import { useTags } from '@/hooks/useDatabase';
+import { BackToSettingsLink } from '@/components';
+import { Tag, CreateTag, UpdateTag, ID } from '@/types';
 import {
   PlusIcon,
   PencilIcon,
@@ -14,29 +14,29 @@ import {
   XMarkIcon,
   TagIcon,
   LockClosedIcon,
-} from "@heroicons/react/24/outline";
+} from '@heroicons/react/24/outline';
 
 interface TagFormData {
   name: string;
   synonyms: string[];
 }
 
-type ViewMode = "list" | "create" | "edit" | "view";
+type ViewMode = 'list' | 'create' | 'edit' | 'view';
 
 export default function TagsManagementPage() {
   const { tags, isLoading, error, createTag, updateTag, deleteTag, refresh } =
     useTags();
 
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState<TagFormData>({
-    name: "",
+    name: '',
     synonyms: [],
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [synonymInput, setSynonymInput] = useState("");
+  const [synonymInput, setSynonymInput] = useState('');
 
   // Filter tags based on search term
   const filteredTags = tags.filter(
@@ -49,35 +49,35 @@ export default function TagsManagementPage() {
 
   // Reset form when view mode changes
   useEffect(() => {
-    if (viewMode === "create") {
-      setFormData({ name: "", synonyms: [] });
+    if (viewMode === 'create') {
+      setFormData({ name: '', synonyms: [] });
       setSelectedTag(null);
-    } else if (viewMode === "edit" && selectedTag) {
+    } else if (viewMode === 'edit' && selectedTag) {
       setFormData({
         name: selectedTag.name,
         synonyms: [...selectedTag.synonyms],
       });
     }
     setFormErrors({});
-    setSynonymInput("");
+    setSynonymInput('');
   }, [viewMode, selectedTag]);
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      errors.name = "Tag name is required";
+      errors.name = 'Tag name is required';
     } else if (formData.name.trim().length < 2) {
-      errors.name = "Tag name must be at least 2 characters";
+      errors.name = 'Tag name must be at least 2 characters';
     } else {
       // Check for duplicate names (excluding current tag when editing)
       const existingTag = tags.find(
         (tag) =>
           tag.name.toLowerCase() === formData.name.trim().toLowerCase() &&
-          (viewMode === "create" || tag.id !== selectedTag?.id)
+          (viewMode === 'create' || tag.id !== selectedTag?.id)
       );
       if (existingTag) {
-        errors.name = "A tag with this name already exists";
+        errors.name = 'A tag with this name already exists';
       }
     }
 
@@ -98,18 +98,18 @@ export default function TagsManagementPage() {
         synonyms: formData.synonyms.filter((s) => s.trim().length > 0),
       };
 
-      if (viewMode === "create") {
+      if (viewMode === 'create') {
         await createTag(tagData as CreateTag);
-      } else if (viewMode === "edit" && selectedTag) {
+      } else if (viewMode === 'edit' && selectedTag) {
         await updateTag({
           id: selectedTag.id,
           ...tagData,
         } as UpdateTag);
       }
 
-      setViewMode("list");
+      setViewMode('list');
     } catch (err) {
-      console.error("Failed to save tag:", err);
+      console.error('Failed to save tag:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -122,18 +122,9 @@ export default function TagsManagementPage() {
       try {
         await deleteTag(tag.id);
       } catch (err) {
-        console.error("Failed to delete tag:", err);
+        console.error('Failed to delete tag:', err);
       }
     }
-  };
-
-  const handleCopy = (tag: Tag) => {
-    setFormData({
-      name: `${tag.name} (Copy)`,
-      synonyms: [...tag.synonyms],
-    });
-    setSelectedTag(null);
-    setViewMode("create");
   };
 
   const addSynonym = () => {
@@ -143,7 +134,7 @@ export default function TagsManagementPage() {
         ...formData,
         synonyms: [...formData.synonyms, synonym],
       });
-      setSynonymInput("");
+      setSynonymInput('');
     }
   };
 
@@ -155,7 +146,7 @@ export default function TagsManagementPage() {
   };
 
   const handleSynonymKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
       addSynonym();
     }
@@ -214,9 +205,9 @@ export default function TagsManagementPage() {
                 </div>
               </div>
 
-              {viewMode === "list" && (
+              {viewMode === 'list' && (
                 <button
-                  onClick={() => setViewMode("create")}
+                  onClick={() => setViewMode('create')}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
                 >
                   <PlusIcon className="h-5 w-5" />
@@ -228,7 +219,7 @@ export default function TagsManagementPage() {
 
           {/* Content */}
           <div className="p-6">
-            {viewMode === "list" && (
+            {viewMode === 'list' && (
               <div className="space-y-6">
                 {/* Search */}
                 <div className="relative">
@@ -271,12 +262,12 @@ export default function TagsManagementPage() {
                       <TagIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                       <div className="text-gray-500">
                         {searchTerm
-                          ? "No tags found matching your search"
-                          : "No tags found"}
+                          ? 'No tags found matching your search'
+                          : 'No tags found'}
                       </div>
                       {!searchTerm && (
                         <button
-                          onClick={() => setViewMode("create")}
+                          onClick={() => setViewMode('create')}
                           className="mt-4 text-blue-600 hover:text-blue-800 underline"
                         >
                           Create your first tag
@@ -320,7 +311,7 @@ export default function TagsManagementPage() {
                             <button
                               onClick={() => {
                                 setSelectedTag(tag);
-                                setViewMode("view");
+                                setViewMode('view');
                               }}
                               className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
                               title="View tag"
@@ -328,20 +319,12 @@ export default function TagsManagementPage() {
                               <EyeIcon className="h-4 w-4" />
                             </button>
 
-                            <button
-                              onClick={() => handleCopy(tag)}
-                              className="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg"
-                              title="Copy tag"
-                            >
-                              <DocumentDuplicateIcon className="h-4 w-4" />
-                            </button>
-
                             {!tag.readonly && (
                               <>
                                 <button
                                   onClick={() => {
                                     setSelectedTag(tag);
-                                    setViewMode("edit");
+                                    setViewMode('edit');
                                   }}
                                   className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
                                   title="Edit tag"
@@ -367,17 +350,17 @@ export default function TagsManagementPage() {
               </div>
             )}
 
-            {(viewMode === "create" || viewMode === "edit") && (
+            {(viewMode === 'create' || viewMode === 'edit') && (
               <div className="max-w-2xl">
                 <div className="mb-6">
                   <button
-                    onClick={() => setViewMode("list")}
+                    onClick={() => setViewMode('list')}
                     className="text-gray-600 hover:text-gray-800 flex items-center gap-2"
                   >
                     ← Back to Tags List
                   </button>
                   <h2 className="text-xl font-semibold text-gray-900 mt-4">
-                    {viewMode === "create" ? "Create New Tag" : "Edit Tag"}
+                    {viewMode === 'create' ? 'Create New Tag' : 'Edit Tag'}
                   </h2>
                 </div>
 
@@ -397,7 +380,7 @@ export default function TagsManagementPage() {
                         setFormData({ ...formData, name: e.target.value })
                       }
                       className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        formErrors.name ? "border-red-300" : "border-gray-300"
+                        formErrors.name ? 'border-red-300' : 'border-gray-300'
                       }`}
                       placeholder="Enter tag name"
                     />
@@ -464,14 +447,14 @@ export default function TagsManagementPage() {
                       className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting
-                        ? "Saving..."
-                        : viewMode === "create"
-                        ? "Create Tag"
-                        : "Update Tag"}
+                        ? 'Saving...'
+                        : viewMode === 'create'
+                        ? 'Create Tag'
+                        : 'Update Tag'}
                     </button>
                     <button
                       type="button"
-                      onClick={() => setViewMode("list")}
+                      onClick={() => setViewMode('list')}
                       className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200"
                     >
                       Cancel
@@ -481,11 +464,11 @@ export default function TagsManagementPage() {
               </div>
             )}
 
-            {viewMode === "view" && selectedTag && (
+            {viewMode === 'view' && selectedTag && (
               <div className="max-w-2xl">
                 <div className="mb-6">
                   <button
-                    onClick={() => setViewMode("list")}
+                    onClick={() => setViewMode('list')}
                     className="text-gray-600 hover:text-gray-800 flex items-center gap-2"
                   >
                     ← Back to Tags List
@@ -524,7 +507,7 @@ export default function TagsManagementPage() {
                       Status
                     </label>
                     <div className="text-gray-900">
-                      {selectedTag.readonly ? "Readonly" : "Editable"}
+                      {selectedTag.readonly ? 'Readonly' : 'Editable'}
                     </div>
                   </div>
 
@@ -550,17 +533,9 @@ export default function TagsManagementPage() {
                 </div>
 
                 <div className="mt-6 flex gap-3">
-                  <button
-                    onClick={() => handleCopy(selectedTag)}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
-                  >
-                    <DocumentDuplicateIcon className="h-4 w-4" />
-                    Copy Tag
-                  </button>
-
                   {!selectedTag.readonly && (
                     <button
-                      onClick={() => setViewMode("edit")}
+                      onClick={() => setViewMode('edit')}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
                     >
                       <PencilIcon className="h-4 w-4" />
