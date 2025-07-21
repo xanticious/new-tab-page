@@ -11,7 +11,7 @@ All 6 main resource types now include a `readonly` boolean flag:
 - **Pictures**: Image icons for URLs (base64 encoded)
 - **Tags**: For categorizing and filtering URLs
 - **URLs**: Bookmarked links with tags and pictures
-- **Themes**: UI customization with CSS/JS files
+- **Themes**: Dynamic React components with editable source code and isolated globals
 - **Categories**: Groups of related URLs
 - **Profiles**: User contexts with categories and themes
 

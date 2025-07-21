@@ -17,7 +17,7 @@ export function MainBookmarkView() {
     isLoading: themeDataLoading,
     error: themeDataError,
   } = useThemeData(selectedProfileId);
-  const { getThemeComponentById, isLoading: themesLoading } =
+  const { getThemeComponentWithProps, isLoading: themesLoading } =
     useThemeComponents();
 
   // Don't render anything until we've loaded the selected profile from localStorage
@@ -78,7 +78,7 @@ export function MainBookmarkView() {
   }
 
   // Get the theme component using the theme ID from the selected profile
-  const ThemeComponent = getThemeComponentById(profile.theme);
+  const ThemeComponent = getThemeComponentWithProps(profile.theme);
 
   if (!ThemeComponent) {
     return (

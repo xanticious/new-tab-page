@@ -66,7 +66,7 @@ const sampleThemeData: ThemeData = {
 };
 
 export function ThemePreview() {
-  const { themes, isLoading, error, getThemeComponentById } =
+  const { themes, isLoading, error, getThemeComponentWithProps } =
     useThemeComponents();
   const [selectedThemeId, setSelectedThemeId] = useState<string>("");
 
@@ -99,7 +99,7 @@ export function ThemePreview() {
 
   const selectedTheme = themes.find((t) => t.id === selectedThemeId);
   const ThemeComponent = selectedTheme
-    ? getThemeComponentById(selectedTheme.id)
+    ? getThemeComponentWithProps(selectedTheme.id)
     : null;
 
   return (
@@ -135,10 +135,12 @@ export function ThemePreview() {
         {selectedTheme && (
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <h3 className="font-medium text-gray-900">{selectedTheme.name}</h3>
-            <p className="text-sm text-gray-600">
-              Component: {selectedTheme.componentName}
-            </p>
             <p className="text-sm text-gray-600">ID: {selectedTheme.id}</p>
+            {selectedTheme.readonly && (
+              <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded-full mt-1">
+                Read-only
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -156,8 +158,7 @@ export function ThemePreview() {
           ) : (
             <div className="p-8 text-center">
               <p className="text-gray-500">
-                No theme component found for &quot;
-                {selectedTheme?.componentName}&quot;
+                No theme selected or theme component could not be loaded.
               </p>
             </div>
           )}

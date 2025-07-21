@@ -1,8 +1,11 @@
 import React from "react";
-import { ThemeData } from "@/types";
-import { TrackableLink } from "@/components/shared/TrackableLink";
+import { ThemeData, TrackableLinkProps } from "@/types";
 
-export const ColorfulTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
+export const ColorfulTheme: React.FC<{
+  data: ThemeData;
+  Link: React.ComponentType<TrackableLinkProps>;
+  globals: Record<string, any>;
+}> = ({ data, Link, globals }) => {
   const gradients = [
     "from-pink-500 to-violet-500",
     "from-blue-500 to-cyan-500",
@@ -47,7 +50,7 @@ export const ColorfulTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                   {category.urls.map((urlItem, urlIndex) => (
-                    <TrackableLink
+                    <Link
                       key={urlItem.id}
                       urlId={urlItem.id}
                       url={urlItem.url}
@@ -76,7 +79,7 @@ export const ColorfulTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
                           </span>
                         </div>
                       </div>
-                    </TrackableLink>
+                    </Link>
                   ))}
                 </div>
               </div>

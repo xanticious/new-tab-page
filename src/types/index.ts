@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Base types
 export type ID = string;
@@ -45,18 +45,31 @@ export interface ThemeData {
   }>;
 }
 
+// TrackableLink component props interface
+export interface TrackableLinkProps {
+  urlId: ID;
+  url: string;
+  className?: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}
+
 // Theme component type
-export type ThemeComponent = React.ComponentType<{ data: ThemeData }>;
+export type ThemeComponent = React.ComponentType<{
+  data: ThemeData;
+  Link: React.ComponentType<TrackableLinkProps>;
+  globals: Record<string, any>;
+}>;
 
 // Theme model - for customizing the appearance
 export interface Theme {
   id: ID;
   name: string;
-  componentName: string; // Name of the component to load (e.g., "DefaultTheme", "DarkTheme")
+  component: ThemeComponent; // React component that renders the theme
+  sourceCode: string; // The source code for the component
+  globals: Record<string, any>; // Global object for the theme to use for caching, etc.
   readonly: boolean;
-}
-
-// Category model - groups related URLs together
+} // Category model - groups related URLs together
 export interface Category {
   id: ID;
   name: string;
@@ -76,7 +89,7 @@ export interface Profile {
 }
 
 // Search engine options
-export type SearchEngine = 'google' | 'bing' | 'duckduckgo' | 'yahoo';
+export type SearchEngine = "google" | "bing" | "duckduckgo" | "yahoo";
 
 // App state model - represents the current application state
 export interface AppState {
@@ -89,20 +102,20 @@ export interface AppState {
 // Additional utility types
 
 // For creating new items (without ID and readonly - users cannot create readonly resources)
-export type CreatePicture = Omit<Picture, 'id' | 'readonly'>;
-export type CreateTag = Omit<Tag, 'id' | 'readonly'>;
-export type CreateUrl = Omit<Url, 'id' | 'readonly'>;
-export type CreateTheme = Omit<Theme, 'id' | 'readonly'>;
-export type CreateCategory = Omit<Category, 'id' | 'readonly'>;
-export type CreateProfile = Omit<Profile, 'id' | 'readonly'>;
+export type CreatePicture = Omit<Picture, "id" | "readonly">;
+export type CreateTag = Omit<Tag, "id" | "readonly">;
+export type CreateUrl = Omit<Url, "id" | "readonly">;
+export type CreateTheme = Omit<Theme, "id" | "readonly">;
+export type CreateCategory = Omit<Category, "id" | "readonly">;
+export type CreateProfile = Omit<Profile, "id" | "readonly">;
 
 // For updating existing items (all fields optional except ID, readonly cannot be modified)
-export type UpdatePicture = Partial<Omit<Picture, 'readonly'>> & { id: ID };
-export type UpdateTag = Partial<Omit<Tag, 'readonly'>> & { id: ID };
-export type UpdateUrl = Partial<Omit<Url, 'readonly'>> & { id: ID };
-export type UpdateTheme = Partial<Omit<Theme, 'readonly'>> & { id: ID };
-export type UpdateCategory = Partial<Omit<Category, 'readonly'>> & { id: ID };
-export type UpdateProfile = Partial<Omit<Profile, 'readonly'>> & { id: ID };
+export type UpdatePicture = Partial<Omit<Picture, "readonly">> & { id: ID };
+export type UpdateTag = Partial<Omit<Tag, "readonly">> & { id: ID };
+export type UpdateUrl = Partial<Omit<Url, "readonly">> & { id: ID };
+export type UpdateTheme = Partial<Omit<Theme, "readonly">> & { id: ID };
+export type UpdateCategory = Partial<Omit<Category, "readonly">> & { id: ID };
+export type UpdateProfile = Partial<Omit<Profile, "readonly">> & { id: ID };
 export type UpdateAppState = Partial<AppState>;
 
 // Collection types for storing multiple items

@@ -1,8 +1,11 @@
 import React from "react";
-import { ThemeData } from "@/types";
-import { TrackableLink } from "@/components/shared/TrackableLink";
+import { ThemeData, TrackableLinkProps } from "@/types";
 
-export const MinimalTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
+export const MinimalTheme: React.FC<{
+  data: ThemeData;
+  Link: React.ComponentType<TrackableLinkProps>;
+  globals: Record<string, any>;
+}> = ({ data, Link, globals }) => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto pt-20">
@@ -23,7 +26,7 @@ export const MinimalTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {category.urls.map((urlItem) => (
-                    <TrackableLink
+                    <Link
                       key={urlItem.id}
                       urlId={urlItem.id}
                       url={urlItem.url}
@@ -41,7 +44,7 @@ export const MinimalTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
                           {urlItem.name}
                         </span>
                       </div>
-                    </TrackableLink>
+                    </Link>
                   ))}
                 </div>
               </div>

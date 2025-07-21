@@ -22,6 +22,11 @@ import {
   ID,
 } from "@/types";
 import { preloadedData } from "@/data/preloaded";
+import {
+  SerializedTheme,
+  serializeTheme,
+  deserializeTheme,
+} from "./themeSerializer";
 
 // Database configuration
 const DB_NAME = "NewTabPageDB";
@@ -126,7 +131,7 @@ class DatabaseAPI {
       this.bulkAdd(transaction.objectStore(STORES.URLS), preloadedData.urls),
       this.bulkAdd(
         transaction.objectStore(STORES.THEMES),
-        preloadedData.themes
+        preloadedData.themes.map(serializeTheme) // Serialize themes for storage
       ),
       this.bulkAdd(
         transaction.objectStore(STORES.CATEGORIES),
@@ -379,11 +384,17 @@ class DatabaseAPI {
    * Theme CRUD operations
    */
   async getTheme(id: ID): Promise<Theme | null> {
-    return this.getItem<Theme>(STORES.THEMES, id);
+    const serialized = await this.getItem<SerializedTheme>(STORES.THEMES, id);
+    if (!serialized) return null;
+    return await deserializeTheme(serialized);
   }
 
   async getAllThemes(): Promise<Theme[]> {
-    return this.getAllItems<Theme>(STORES.THEMES);
+    const serializedThemes = await this.getAllItems<SerializedTheme>(
+      STORES.THEMES
+    );
+    const themes = await Promise.all(serializedThemes.map(deserializeTheme));
+    return themes;
   }
 
   async createTheme(data: CreateTheme): Promise<Theme> {
@@ -392,7 +403,9 @@ class DatabaseAPI {
       id: crypto.randomUUID(),
       readonly: false,
     };
-    return this.addItem(STORES.THEMES, theme);
+    const serialized = serializeTheme(theme);
+    await this.addItem(STORES.THEMES, serialized);
+    return theme;
   }
 
   async updateTheme(data: UpdateTheme): Promise<Theme> {
@@ -400,7 +413,9 @@ class DatabaseAPI {
     if (!existing) throw new Error("Theme not found");
 
     const updated: Theme = { ...existing, ...data };
-    return this.updateItem(STORES.THEMES, updated);
+    const serialized = serializeTheme(updated);
+    await this.updateItem(STORES.THEMES, serialized);
+    return updated;
   }
 
   async deleteTheme(id: ID): Promise<void> {
@@ -861,7 +876,7 @@ class DatabaseAPI {
   /**
    * Get recent URLs based on click events
    */
-  async getRecentUrls(limit: number = 5): Promise<Url[]> {
+  async getRecentUrls(limit: number = 10): Promise<Url[]> {
     if (!this.db) throw new Error("Database not initialized");
 
     try {
@@ -893,8 +908,6 @@ class DatabaseAPI {
       return [];
     }
   }
-
-  // ...existing code...
 }
 
 // Export singleton instance
