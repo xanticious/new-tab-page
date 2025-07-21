@@ -8,9 +8,9 @@ export class UrlTracker {
   /**
    * Track a URL click and optionally navigate to the URL
    * @param urlId - The ID of the URL being clicked
-   * @param navigate - Whether to open the URL in a new tab (default: true)
+   * @param navigate - Whether to open the URL in a new tab (default: false, let browser handle navigation)
    */
-  static async trackClick(urlId: ID, navigate: boolean = true): Promise<void> {
+  static async trackClick(urlId: ID, navigate: boolean = false): Promise<void> {
     try {
       // Add click event to database
       await db.urlClickEvents.add(urlId);
@@ -31,6 +31,28 @@ export class UrlTracker {
           window.open(url.url, "_blank", "noopener,noreferrer");
         }
       }
+    }
+  }
+
+  /**
+   * Track a URL activation with more detailed context
+   * @param urlId - The ID of the URL being clicked
+   * @param activationType - Type of activation (click, keyboard, context-menu)
+   */
+  static async trackActivation(
+    urlId: ID,
+    activationType:
+      | "left-click"
+      | "middle-click"
+      | "right-click"
+      | "keyboard"
+      | "context-menu" = "left-click"
+  ): Promise<void> {
+    try {
+      // Add click event to database with additional context if needed
+      await db.urlClickEvents.add(urlId);
+    } catch (error) {
+      console.error(`Failed to track URL ${activationType}:`, error);
     }
   }
 

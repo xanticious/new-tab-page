@@ -14,6 +14,7 @@ export { SearchBar } from "./shared/SearchBar";
 export { StatsCard } from "./shared/StatsCard";
 export { SearchablePictureSelector } from "./shared/SearchablePictureSelector";
 export { SearchableUrlSelector } from "./shared/SearchableUrlSelector";
+export { TrackableLink } from "./shared/TrackableLink";
 
 // Picture components
 export { ImageUpload } from "./pictures/ImageUpload";

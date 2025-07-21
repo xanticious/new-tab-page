@@ -1,5 +1,6 @@
 import React from "react";
 import { ThemeData } from "@/types";
+import { TrackableLink } from "@/components/shared/TrackableLink";
 
 export const DefaultTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
   return (
@@ -30,9 +31,10 @@ export const DefaultTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                   {category.urls.map((urlItem) => (
-                    <a
+                    <TrackableLink
                       key={urlItem.id}
-                      href={urlItem.url}
+                      urlId={urlItem.id}
+                      url={urlItem.url}
                       className="group block bg-white border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                     >
                       <div className="flex flex-col items-center text-center space-y-3">
@@ -49,7 +51,7 @@ export const DefaultTheme: React.FC<{ data: ThemeData }> = ({ data }) => {
                           {urlItem.name}
                         </span>
                       </div>
-                    </a>
+                    </TrackableLink>
                   ))}
                 </div>
               </div>

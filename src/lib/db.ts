@@ -525,6 +525,59 @@ class DatabaseAPI {
     return { pictures, tags, urls, themes, categories, profiles };
   }
 
+  async exportProfileData(profileId: ID): Promise<{
+    pictures: Picture[];
+    tags: Tag[];
+    urls: Url[];
+    themes: Theme[];
+    categories: Category[];
+    profiles: Profile[];
+  }> {
+    // Get the specific profile
+    const profile = await this.getProfile(profileId);
+    if (!profile) {
+      throw new Error("Profile not found");
+    }
+
+    // Get all categories for this profile
+    const allCategories = await this.getAllCategories();
+    const profileCategories = allCategories.filter((c) =>
+      profile.categories.includes(c.id)
+    );
+
+    // Get all URLs from these categories
+    const allUrls = await this.getAllUrls();
+    const categoryUrlIds = profileCategories.flatMap((c) => c.urls);
+    const profileUrls = allUrls.filter((u) => categoryUrlIds.includes(u.id));
+
+    // Get all tags used by these URLs
+    const allTags = await this.getAllTags();
+    const usedTagIds = [...new Set(profileUrls.flatMap((u) => u.tags))];
+    const profileTags = allTags.filter((t) => usedTagIds.includes(t.id));
+
+    // Get all pictures used by these URLs
+    const allPictures = await this.getAllPictures();
+    const usedPictureIds = [
+      ...new Set(profileUrls.map((u) => u.picture).filter(Boolean) as ID[]),
+    ];
+    const profilePictures = allPictures.filter((p) =>
+      usedPictureIds.includes(p.id)
+    );
+
+    // Get the theme for this profile
+    const allThemes = await this.getAllThemes();
+    const profileThemes = allThemes.filter((t) => t.id === profile.theme);
+
+    return {
+      pictures: profilePictures,
+      tags: profileTags,
+      urls: profileUrls,
+      themes: profileThemes,
+      categories: profileCategories,
+      profiles: [profile],
+    };
+  }
+
   async importData(data: {
     pictures?: Picture[];
     tags?: Tag[];
@@ -926,6 +979,7 @@ export const db = {
 
   // Utility functions
   export: () => dbAPI.exportData(),
+  exportProfile: (profileId: ID) => dbAPI.exportProfileData(profileId),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   import: (data: any) => dbAPI.importData(data),
   clearUserData: () => dbAPI.clearUserData(),
