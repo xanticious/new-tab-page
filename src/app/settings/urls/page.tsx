@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useUrls } from "@/hooks/useDatabase";
 import { useTags } from "@/hooks/useDatabase";
 import { usePictures } from "@/hooks/useDatabase";
@@ -425,11 +426,13 @@ export default function UrlsManagementPage() {
                               {/* Picture */}
                               {url.picture && picturesMap[url.picture] && (
                                 <div className="flex-shrink-0">
-                                  <img
+                                  <Image
                                     src={
                                       picturesMap[url.picture].base64ImageData
                                     }
                                     alt={picturesMap[url.picture].altText}
+                                    width={32}
+                                    height={32}
                                     className="w-8 h-8 rounded object-cover"
                                   />
                                 </div>
@@ -659,11 +662,13 @@ export default function UrlsManagementPage() {
                     {selectedUrl.picture &&
                       picturesMap[selectedUrl.picture] && (
                         <div className="flex-shrink-0">
-                          <img
+                          <Image
                             src={
                               picturesMap[selectedUrl.picture].base64ImageData
                             }
                             alt={picturesMap[selectedUrl.picture].altText}
+                            width={64}
+                            height={64}
                             className="w-16 h-16 rounded object-cover border border-gray-200"
                           />
                         </div>

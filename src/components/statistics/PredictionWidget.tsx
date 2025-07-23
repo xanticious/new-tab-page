@@ -51,8 +51,8 @@ export const PredictionWidget: React.FC<PredictionWidgetProps> = ({
 
       <div className="mb-6">
         <p className="text-gray-600 mb-4">
-          Choose a future date and time to predict which bookmarks you're most
-          likely to click.
+          Choose a future date and time to predict which bookmarks you&apos;re
+          most likely to click.
         </p>
 
         <div className="flex flex-wrap gap-4 items-end">
@@ -154,8 +154,8 @@ export const PredictionWidget: React.FC<PredictionWidgetProps> = ({
                   • Global Click %: How often you click this link overall
                 </div>
                 <div>
-                  • Recent Click %: How much you've clicked this in the last 48
-                  hours
+                  • Recent Click %: How much you&apos;ve clicked this in the
+                  last 48 hours
                 </div>
                 <div>• Weekday %: Your pattern for this day of the week</div>
                 <div>• Time of Day %: Your pattern for this time period</div>

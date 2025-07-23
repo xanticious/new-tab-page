@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { Url, Picture } from "@/types";
 
 interface SearchableUrlSelectorProps {
@@ -223,7 +224,7 @@ export function SearchableUrlSelector({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, highlightedIndex, filteredUrls]);
+  }, [isOpen, highlightedIndex, filteredUrls]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Scroll highlighted item into view
   useEffect(() => {
@@ -364,9 +365,11 @@ export function SearchableUrlSelector({
                   className="inline-flex items-center gap-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
                 >
                   {url.picture && picturesMap[url.picture] && (
-                    <img
+                    <Image
                       src={picturesMap[url.picture].base64ImageData}
                       alt={picturesMap[url.picture].altText}
+                      width={16}
+                      height={16}
                       className="w-4 h-4 rounded object-cover"
                     />
                   )}
@@ -406,9 +409,11 @@ export function SearchableUrlSelector({
                 >
                   <GripVerticalIcon className="h-4 w-4 text-gray-400 flex-shrink-0" />
                   {url.picture && picturesMap[url.picture] && (
-                    <img
+                    <Image
                       src={picturesMap[url.picture].base64ImageData}
                       alt={picturesMap[url.picture].altText}
+                      width={20}
+                      height={20}
                       className="w-5 h-5 rounded object-cover flex-shrink-0"
                     />
                   )}
@@ -507,9 +512,11 @@ export function SearchableUrlSelector({
                         {/* URL Picture */}
                         {url.picture && picturesMap[url.picture] && (
                           <div className="flex-shrink-0">
-                            <img
+                            <Image
                               src={picturesMap[url.picture].base64ImageData}
                               alt={picturesMap[url.picture].altText}
+                              width={24}
+                              height={24}
                               className="w-6 h-6 rounded object-cover"
                             />
                           </div>

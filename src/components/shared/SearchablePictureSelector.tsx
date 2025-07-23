@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { Picture } from "@/types";
 
 interface SearchablePictureSelectorProps {
@@ -147,7 +148,7 @@ export function SearchablePictureSelector({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, filteredPictures, highlightedIndex]);
+  }, [isOpen, filteredPictures, highlightedIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Scroll highlighted item into view
   useEffect(() => {
@@ -191,9 +192,11 @@ export function SearchablePictureSelector({
           <div className="flex items-center gap-2 flex-1 min-w-0">
             {selectedPicture ? (
               <>
-                <img
+                <Image
                   src={selectedPicture.base64ImageData}
                   alt={selectedPicture.altText}
+                  width={24}
+                  height={24}
                   className="w-6 h-6 rounded object-cover flex-shrink-0"
                 />
                 <span className="text-sm text-gray-900 truncate">
@@ -283,9 +286,11 @@ export function SearchablePictureSelector({
                         : "text-gray-700"
                     }`}
                   >
-                    <img
+                    <Image
                       src={picture.base64ImageData}
                       alt={picture.altText}
+                      width={24}
+                      height={24}
                       className="w-6 h-6 rounded object-cover flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">

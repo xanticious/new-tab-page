@@ -1,10 +1,10 @@
 import React from "react";
-import { Theme } from "@/types";
+import { Theme, ThemeData, TrackableLinkProps } from "@/types";
 
 // Import Babel for JSX transformation
 declare global {
   interface Window {
-    Babel: any;
+    Babel: typeof import("@babel/standalone");
   }
 }
 
@@ -32,7 +32,7 @@ export interface SerializedTheme {
   id: string;
   name: string;
   sourceCode: string;
-  globals: Record<string, any>;
+  globals: Record<string, unknown>;
   readonly: boolean;
 }
 
@@ -50,9 +50,15 @@ export function serializeTheme(theme: Theme): SerializedTheme {
 // Compile theme component source code with Babel
 const compileComponent = async (
   sourceCode: string,
-  themeData: any,
-  globals: Record<string, any>
-): Promise<React.ComponentType<any>> => {
+  themeData: unknown,
+  globals: Record<string, unknown>
+): Promise<
+  React.ComponentType<{
+    data: ThemeData;
+    Link: React.ComponentType<TrackableLinkProps>;
+    globals: Record<string, unknown>;
+  }>
+> => {
   try {
     console.log("Starting theme compilation...");
     const babel = await getBabel();
@@ -101,6 +107,10 @@ const compileComponent = async (
 
     console.log("Creating component factory...");
     console.log("Compiled code:", compiledCode);
+
+    if (!compiledCode) {
+      throw new Error("Failed to compile theme source code");
+    }
 
     // The compiled code is an IIFE that evaluates to the component
     // We need to create a function that returns the result of that IIFE
@@ -162,13 +172,16 @@ export async function deserializeTheme(
     console.error(`Failed to deserialize theme ${serialized.name}:`, error);
 
     // Return a fallback component
-    const fallbackComponent = ({ data, Link }: any) =>
-      React.createElement("div", {
-        className: "p-8 text-center",
-        children: `Error loading theme: ${serialized.name} - ${
+    const fallbackComponent = () =>
+      React.createElement(
+        "div",
+        {
+          className: "p-8 text-center",
+        },
+        `Error loading theme: ${serialized.name} - ${
           error instanceof Error ? error.message : "Unknown error"
-        }`,
-      });
+        }`
+      );
 
     return {
       id: serialized.id,

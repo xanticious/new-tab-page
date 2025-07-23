@@ -2,21 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
-import {
-  Theme,
-  CreateTheme,
-  UpdateTheme,
-  ThemeData,
-  ThemeComponent,
-  TrackableLinkProps,
-} from "@/types";
+import { Theme, CreateTheme, UpdateTheme, ThemeData } from "@/types";
 import { useThemes } from "@/hooks/useDatabase";
 import { BackToSettingsLink } from "@/components/BackToSettingsLink";
 import { DEFAULT_THEME_SOURCE_CODE } from "@/data/themes";
-import { deserializeTheme, serializeTheme } from "@/lib/themeSerializer";
+import { deserializeTheme } from "@/lib/themeSerializer";
 
 // Monaco Editor configuration function
-const configureMonacoEditor = (monaco: any) => {
+const configureMonacoEditor = (monaco: typeof import("monaco-editor")) => {
   // Define TypeScript interfaces for intellisense
   const typeDefs = `
 declare module "react" {
@@ -444,7 +437,10 @@ export default ThemeComponent;
 
   // Register CSS class completion provider for className attributes
   monaco.languages.registerCompletionItemProvider("typescript", {
-    provideCompletionItems: (model: any, position: any) => {
+    provideCompletionItems: (
+      model: import("monaco-editor").editor.ITextModel,
+      position: import("monaco-editor").Position
+    ) => {
       const word = model.getWordUntilPosition(position);
       const range = {
         startLineNumber: position.lineNumber,
@@ -482,7 +478,10 @@ export default ThemeComponent;
 
   // Add helpful code snippets for theme development
   monaco.languages.registerCompletionItemProvider("typescript", {
-    provideCompletionItems: (model: any, position: any) => {
+    provideCompletionItems: (
+      model: import("monaco-editor").editor.ITextModel,
+      position: import("monaco-editor").Position
+    ) => {
       const word = model.getWordUntilPosition(position);
       const range = {
         startLineNumber: position.lineNumber,
@@ -630,22 +629,19 @@ const SAMPLE_THEME_DATA: ThemeData = {
 };
 
 // Mock TrackableLink component for preview
-const MockLink: React.FC<any> = ({ children, className, url }) => (
+const MockLink: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  url?: string;
+}> = ({ children, className, url }) => (
   <a href={url} className={className} onClick={(e) => e.preventDefault()}>
     {children}
   </a>
 );
 
 export default function ThemesManagementPage() {
-  const {
-    themes,
-    isLoading,
-    error,
-    createTheme,
-    updateTheme,
-    deleteTheme,
-    refresh,
-  } = useThemes();
+  const { themes, isLoading, error, createTheme, updateTheme, deleteTheme } =
+    useThemes();
 
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
@@ -657,6 +653,7 @@ export default function ThemesManagementPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [compiledPreviewComponent, setCompiledPreviewComponent] =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useState<React.ComponentType<any> | null>(null);
   const [isCompilingPreview, setIsCompilingPreview] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
@@ -863,7 +860,7 @@ export default function ThemesManagementPage() {
         style={{ height: "400px" }}
       >
         <p className="text-gray-500">
-          Click "Refresh Preview" to see your theme
+          Click &quot;Refresh Preview&quot; to see your theme
         </p>
       </div>
     );
@@ -1132,9 +1129,9 @@ export default function ThemesManagementPage() {
                       )}
                       <p className="text-gray-500 text-sm mt-1">
                         Write a React component function that receives{" "}
-                        {`{ data, Link, globals }`} props. Type "theme-basic"
-                        for a complete starter template, or "theme-card" for
-                        bookmark card components.
+                        {`{ data, Link, globals }`} props. Type
+                        &quot;theme-basic&quot; for a complete starter template,
+                        or &quot;theme-card&quot; for bookmark card components.
                       </p>
                       <div className="text-xs text-gray-400 mt-1 space-y-1">
                         <p>
@@ -1144,7 +1141,10 @@ export default function ThemesManagementPage() {
                           • Use Ctrl+Space for autocomplete and TailwindCSS
                           class suggestions
                         </p>
-                        <p>• Type "theme-" to see available code snippets</p>
+                        <p>
+                          • Type &quot;theme-&quot; to see available code
+                          snippets
+                        </p>
                         <p>
                           • Access bookmark data via{" "}
                           <code className="bg-gray-100 px-1 rounded">
@@ -1154,7 +1154,7 @@ export default function ThemesManagementPage() {
                         <p>
                           • Wrap links with{" "}
                           <code className="bg-gray-100 px-1 rounded">
-                            &lt;Link urlId="" url=""&gt;
+                            &lt;Link urlId=&quot;&quot; url=&quot;&quot;&gt;
                           </code>{" "}
                           for tracking
                         </p>

@@ -50,7 +50,7 @@ export const TimeSlotTable: React.FC<TimeSlotTableProps> = ({ data }) => {
                       >
                         {topUrls.length > 0 ? (
                           <div className="space-y-1">
-                            {topUrls.map((urlData, index) => (
+                            {topUrls.map((urlData) => (
                               <div
                                 key={urlData.url.id}
                                 className="text-xs bg-blue-50 rounded px-2 py-1"

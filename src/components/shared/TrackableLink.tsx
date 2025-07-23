@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { UrlTracker } from "@/utils/urlTracker";
 import { ID } from "@/types";
 
@@ -23,22 +23,25 @@ export const TrackableLink: React.FC<TrackableLinkProps> = ({
   const lastTrackTimeRef = useRef(0);
 
   // Debounced tracking to prevent duplicate events
-  const trackActivation = async (
-    activationType:
-      | "left-click"
-      | "middle-click"
-      | "right-click"
-      | "keyboard"
-      | "context-menu"
-  ) => {
-    const now = Date.now();
-    if (now - lastTrackTimeRef.current < 100) {
-      return; // Debounce rapid successive events
-    }
-    lastTrackTimeRef.current = now;
+  const trackActivation = useCallback(
+    async (
+      activationType:
+        | "left-click"
+        | "middle-click"
+        | "right-click"
+        | "keyboard"
+        | "context-menu"
+    ) => {
+      const now = Date.now();
+      if (now - lastTrackTimeRef.current < 100) {
+        return; // Debounce rapid successive events
+      }
+      lastTrackTimeRef.current = now;
 
-    await UrlTracker.trackActivation(urlId, activationType);
-  };
+      await UrlTracker.trackActivation(urlId, activationType);
+    },
+    [urlId]
+  );
 
   const handleClick = async (e: React.MouseEvent) => {
     // Call custom onClick if provided
@@ -121,7 +124,7 @@ export const TrackableLink: React.FC<TrackableLinkProps> = ({
       window.removeEventListener("beforeunload", handleBeforeUnload);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [urlId]);
+  }, [urlId, trackActivation]);
 
   return (
     <a

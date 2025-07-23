@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 
 interface ImageUploadProps {
   onImageSelected: (base64: string, fileName: string) => void;
@@ -11,7 +11,7 @@ interface ImageUploadProps {
 export const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageSelected,
   currentImage,
-  className = '',
+  className = "",
 }) => {
   const [preview, setPreview] = useState<string | null>(currentImage || null);
   const [isDragging, setIsDragging] = useState(false);
@@ -19,7 +19,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handleFileSelect = (file: File) => {
     if (!file.type.match(/^image\/(gif|png|ico|jpe?g)$/)) {
-      alert('Please select a valid image file (GIF, PNG, ICO, JPG, JPEG)');
+      alert("Please select a valid image file (GIF, PNG, ICO, JPG, JPEG)");
       return;
     }
 
@@ -54,7 +54,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handlePaste = (e: React.ClipboardEvent) => {
     const items = Array.from(e.clipboardData.items);
-    const imageItem = items.find((item) => item.type.startsWith('image/'));
+    const imageItem = items.find((item) => item.type.startsWith("image/"));
 
     if (imageItem) {
       const file = imageItem.getAsFile();
@@ -80,8 +80,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       <div
         className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
           isDragging
-            ? 'border-blue-500 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400'
+            ? "border-blue-500 bg-blue-50"
+            : "border-gray-300 hover:border-gray-400"
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -91,6 +91,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       >
         {preview ? (
           <div className="space-y-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview}
               alt="Preview"

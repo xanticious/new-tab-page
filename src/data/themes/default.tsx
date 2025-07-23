@@ -4,8 +4,8 @@ import { ThemeData, TrackableLinkProps } from "@/types";
 export const DefaultTheme: React.FC<{
   data: ThemeData;
   Link: React.ComponentType<TrackableLinkProps>;
-  globals: Record<string, any>;
-}> = ({ data, Link, globals }) => {
+  globals: Record<string, unknown>;
+}> = ({ data, Link }) => {
   return (
     <div className="min-h-screen bg-blue-200">
       <div className="max-w-7xl mx-auto pt-20">

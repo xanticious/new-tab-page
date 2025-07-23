@@ -13,7 +13,7 @@ import React from "react";
 // Declare the global themeGlobals object
 declare global {
   interface Window {
-    themeGlobals: Record<string, Record<string, any>>;
+    themeGlobals: Record<string, Record<string, unknown>>;
   }
 }
 
@@ -58,7 +58,7 @@ export function useThemeComponents() {
       }
 
       // Return a wrapped component that includes all required props
-      return ({ data }: { data: ThemeData }) =>
+      const WrappedComponent = ({ data }: { data: ThemeData }) =>
         React.createElement(theme.component, {
           data,
           Link: LinkComponent,
@@ -67,6 +67,9 @@ export function useThemeComponents() {
               ? window.themeGlobals[theme.name]
               : {},
         });
+
+      WrappedComponent.displayName = `ThemeWrapper(${theme.name})`;
+      return WrappedComponent;
     };
   }, [themes]);
 

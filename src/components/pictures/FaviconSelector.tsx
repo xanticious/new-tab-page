@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
+import NextImage from "next/image";
 
 interface FaviconOption {
   size: string;
@@ -21,21 +22,21 @@ interface FaviconSelectorProps {
 
 export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
   onFaviconSelected,
-  className = '',
+  className = "",
 }) => {
-  const [websiteUrl, setWebsiteUrl] = useState('');
+  const [websiteUrl, setWebsiteUrl] = useState("");
   const [faviconOptions, setFaviconOptions] = useState<FaviconOption[]>([]);
-  const [selectedSize, setSelectedSize] = useState<string>('');
+  const [selectedSize, setSelectedSize] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const sizes = ['16', '32', '64', '128', '256', '512'];
+  const sizes = ["16", "32", "64", "128", "256", "512"];
 
   const extractDomain = (url: string): string => {
     try {
       // Add protocol if missing
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "https://" + url;
       }
       const urlObj = new URL(url);
       return urlObj.hostname;
@@ -59,8 +60,8 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
     try {
       // Try to fetch the image as a blob to avoid CORS issues
       const response = await fetch(src, {
-        mode: 'cors',
-        cache: 'default',
+        mode: "cors",
+        cache: "default",
       });
 
       if (!response.ok) {
@@ -79,7 +80,7 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
       // If fetch fails due to CORS, we'll need to use a different approach
       // For now, let's try using a CORS proxy or just return the URL
       console.warn(
-        'Direct fetch failed, trying alternative approach:',
+        "Direct fetch failed, trying alternative approach:",
         fetchError
       );
 
@@ -102,11 +103,11 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
           reader.onerror = reject;
           reader.readAsDataURL(blob);
         });
-      } catch (proxyError) {
+      } catch {
         // If all else fails, we might need to just use the URL directly
         // This would require changing the parent component to handle URLs instead of base64
         throw new Error(
-          'Unable to convert image to base64 due to CORS restrictions'
+          "Unable to convert image to base64 due to CORS restrictions"
         );
       }
     }
@@ -118,7 +119,7 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
     setIsLoading(true);
     setError(null);
     setFaviconOptions([]);
-    setSelectedSize('');
+    setSelectedSize("");
 
     const domain = extractDomain(websiteUrl.trim());
 
@@ -176,14 +177,14 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
       const base64 = await convertImageToBase64(selectedOption.url);
       onFaviconSelected(base64, selectedSize, false);
     } catch (err) {
-      console.error('Failed to convert favicon to base64:', err);
-      console.log('Falling back to using URL directly...');
+      console.error("Failed to convert favicon to base64:", err);
+      console.log("Falling back to using URL directly...");
 
       // Fallback: pass the URL directly instead of base64
       onFaviconSelected(selectedOption.url, selectedSize, true);
 
       setError(
-        'Note: Using direct URL due to browser security restrictions. The favicon should still work correctly.'
+        "Note: Using direct URL due to browser security restrictions. The favicon should still work correctly."
       );
     }
   };
@@ -194,7 +195,7 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
         (option.isLoaded &&
           option.actualSize &&
           option.actualSize.width <= 16 &&
-          option.size !== '16')
+          option.size !== "16")
     );
   };
 
@@ -212,7 +213,7 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
               onChange={(e) => setWebsiteUrl(e.target.value)}
               placeholder="https://example.com or example.com"
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              onKeyPress={(e) => e.key === 'Enter' && loadFavicons()}
+              onKeyPress={(e) => e.key === "Enter" && loadFavicons()}
             />
             <button
               type="button"
@@ -220,7 +221,7 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
               disabled={!websiteUrl.trim() || isLoading}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Loading...' : 'Load'}
+              {isLoading ? "Loading..." : "Load"}
             </button>
           </div>
         </div>
@@ -238,10 +239,10 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
                     key={option.size}
                     className={`border rounded-lg p-3 cursor-pointer transition-colors ${
                       disabled
-                        ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-50'
+                        ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-50"
                         : selectedSize === option.size
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-300 hover:border-gray-400'
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-300 hover:border-gray-400"
                     }`}
                     onClick={() => !disabled && setSelectedSize(option.size)}
                   >
@@ -274,15 +275,17 @@ export const FaviconSelector: React.FC<FaviconSelectorProps> = ({
                         )}
                       </div>
                       {option.isLoaded && !option.hasError && (
-                        <img
+                        <NextImage
                           src={option.url}
                           alt={`${option.size}×${option.size} favicon`}
+                          width={Math.min(parseInt(option.size), 64)}
+                          height={Math.min(parseInt(option.size), 64)}
                           className="rounded border"
                           style={{
                             width: `${Math.min(parseInt(option.size), 64)}px`,
                             height: `${Math.min(parseInt(option.size), 64)}px`,
-                            maxWidth: '100%',
-                            maxHeight: '100%',
+                            maxWidth: "100%",
+                            maxHeight: "100%",
                           }}
                         />
                       )}

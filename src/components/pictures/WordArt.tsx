@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 interface WordArtProps {
   onImageGenerated: (base64: string) => void;
@@ -8,50 +8,50 @@ interface WordArtProps {
 }
 
 const FONTS = [
-  { name: 'Arial', value: 'Arial, sans-serif' },
-  { name: 'Times New Roman', value: 'Times New Roman, serif' },
-  { name: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
-  { name: 'Georgia', value: 'Georgia, serif' },
-  { name: 'Comic Sans MS', value: 'Comic Sans MS, cursive' },
+  { name: "Arial", value: "Arial, sans-serif" },
+  { name: "Times New Roman", value: "Times New Roman, serif" },
+  { name: "Helvetica", value: "Helvetica, Arial, sans-serif" },
+  { name: "Georgia", value: "Georgia, serif" },
+  { name: "Comic Sans MS", value: "Comic Sans MS, cursive" },
 ];
 
 const PRESET_COLORS = [
-  '#000000',
-  '#FFFFFF',
-  '#FF0000',
-  '#00FF00',
-  '#0000FF',
-  '#FFFF00',
-  '#FF00FF',
-  '#00FFFF',
-  '#FFA500',
-  '#800080',
-  '#008000',
-  '#000080',
-  '#808080',
-  '#C0C0C0',
-  '#800000',
+  "#000000",
+  "#FFFFFF",
+  "#FF0000",
+  "#00FF00",
+  "#0000FF",
+  "#FFFF00",
+  "#FF00FF",
+  "#00FFFF",
+  "#FFA500",
+  "#800080",
+  "#008000",
+  "#000080",
+  "#808080",
+  "#C0C0C0",
+  "#800000",
 ];
 
 export const WordArt: React.FC<WordArtProps> = ({
   onImageGenerated,
-  className = '',
+  className = "",
 }) => {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [font, setFont] = useState(FONTS[0].value);
-  const [textColor, setTextColor] = useState('#000000');
-  const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
+  const [textColor, setTextColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
   const [lineHeight, setLineHeight] = useState(1.2);
   const [preview, setPreview] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const generateImage = () => {
+  const generateImage = useCallback(() => {
     if (!text.trim()) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     // Set canvas size
@@ -64,11 +64,11 @@ export const WordArt: React.FC<WordArtProps> = ({
 
     // Set text properties
     ctx.fillStyle = textColor;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     // Split text into lines
-    const lines = text.split('\n');
+    const lines = text.split("\n");
 
     // Calculate font size to fit text
     let fontSize = 48;
@@ -77,7 +77,7 @@ export const WordArt: React.FC<WordArtProps> = ({
     // Find the longest line for width calculation
     const longestLine = lines.reduce(
       (longest, line) => (line.length > longest.length ? line : longest),
-      ''
+      ""
     );
 
     // Adjust font size to fit width
@@ -108,7 +108,7 @@ export const WordArt: React.FC<WordArtProps> = ({
     // Convert to base64
     const base64 = canvas.toDataURL();
     setPreview(base64);
-  };
+  }, [text, font, textColor, backgroundColor, lineHeight]);
 
   const handleGenerate = () => {
     generateImage();
@@ -123,7 +123,7 @@ export const WordArt: React.FC<WordArtProps> = ({
     } else {
       setPreview(null);
     }
-  }, [text, font, textColor, backgroundColor, lineHeight]);
+  }, [text, font, textColor, backgroundColor, lineHeight, generateImage]);
 
   return (
     <div className={className}>
@@ -179,8 +179,8 @@ export const WordArt: React.FC<WordArtProps> = ({
                     onClick={() => setTextColor(color)}
                     className={`w-6 h-6 rounded border-2 ${
                       textColor === color
-                        ? 'border-gray-800'
-                        : 'border-gray-300'
+                        ? "border-gray-800"
+                        : "border-gray-300"
                     }`}
                     style={{ backgroundColor: color }}
                     title={color}
@@ -209,8 +209,8 @@ export const WordArt: React.FC<WordArtProps> = ({
                     onClick={() => setBackgroundColor(color)}
                     className={`w-6 h-6 rounded border-2 ${
                       backgroundColor === color
-                        ? 'border-gray-800'
-                        : 'border-gray-300'
+                        ? "border-gray-800"
+                        : "border-gray-300"
                     }`}
                     style={{ backgroundColor: color }}
                     title={color}
@@ -253,6 +253,7 @@ export const WordArt: React.FC<WordArtProps> = ({
           </label>
           <div className="border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[256px] flex items-center justify-center">
             {preview ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img
                 src={preview}
                 alt="WordArt Preview"
@@ -283,7 +284,7 @@ export const WordArt: React.FC<WordArtProps> = ({
       {/* Hidden canvas for image generation */}
       <canvas
         ref={canvasRef}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         width={256}
         height={256}
       />

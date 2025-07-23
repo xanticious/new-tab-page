@@ -222,7 +222,7 @@ export function calculatePredictionScores(
       if (!isHoliday) {
         // Find the last 4 occurrences of the target weekday (excluding holidays)
         const weekdayDates: Date[] = [];
-        let checkDate = new Date(targetDate);
+        const checkDate = new Date(targetDate);
         checkDate.setDate(checkDate.getDate() - 7); // Start from a week before
 
         while (

@@ -4,8 +4,8 @@ import { ThemeData, TrackableLinkProps } from "@/types";
 export const ColorfulTheme: React.FC<{
   data: ThemeData;
   Link: React.ComponentType<TrackableLinkProps>;
-  globals: Record<string, any>;
-}> = ({ data, Link, globals }) => {
+  globals: Record<string, unknown>;
+}> = ({ data, Link }) => {
   const gradients = [
     "from-pink-500 to-violet-500",
     "from-blue-500 to-cyan-500",

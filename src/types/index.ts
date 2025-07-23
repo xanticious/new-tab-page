@@ -58,7 +58,7 @@ export interface TrackableLinkProps {
 export type ThemeComponent = React.ComponentType<{
   data: ThemeData;
   Link: React.ComponentType<TrackableLinkProps>;
-  globals: Record<string, any>;
+  globals: Record<string, unknown>;
 }>;
 
 // Theme model - for customizing the appearance
@@ -67,7 +67,7 @@ export interface Theme {
   name: string;
   component: ThemeComponent; // React component that renders the theme
   sourceCode: string; // The source code for the component
-  globals: Record<string, any>; // Global object for the theme to use for caching, etc.
+  globals: Record<string, unknown>; // Global object for the theme to use for caching, etc.
   readonly: boolean;
 } // Category model - groups related URLs together
 export interface Category {

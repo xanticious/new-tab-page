@@ -10,16 +10,7 @@ import {
 } from "@/hooks/useDatabase";
 import { BackToSettingsLink, FormHeader } from "@/components";
 import { db } from "@/lib/db";
-import type {
-  Profile,
-  Category,
-  Url,
-  Tag,
-  Picture,
-  ExportData,
-  ImportResult,
-  ID,
-} from "@/types";
+import type { ExportData, ImportResult, ID } from "@/types";
 
 const ManageImportExport = () => {
   const { profiles, refresh: refreshProfiles } = useProfiles();
@@ -37,7 +28,7 @@ const ManageImportExport = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Helper function to download JSON data as file
-  const downloadAsJson = (data: any, filename: string) => {
+  const downloadAsJson = (data: ExportData, filename: string) => {
     const jsonString = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -169,7 +160,6 @@ const ManageImportExport = () => {
       const importedTagsMap: Record<ID, ID> = {}; // old id -> new id
       const importedUrlsMap: Record<ID, ID> = {}; // old id -> new id
       const importedCategoriesMap: Record<ID, ID> = {}; // old id -> new id
-      const importedThemesMap: Record<ID, ID> = {}; // old id -> new id (for future use)
 
       // Import pictures first (other items might reference them)
       if (importData.pictures && Array.isArray(importData.pictures)) {

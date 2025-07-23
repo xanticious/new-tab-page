@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useCategories } from "@/hooks/useDatabase";
 import { useUrls } from "@/hooks/useDatabase";
 import { usePictures } from "@/hooks/useDatabase";
@@ -431,7 +432,7 @@ export default function CategoriesManagementPage() {
                                     >
                                       {url.picture &&
                                         picturesMap[url.picture] && (
-                                          <img
+                                          <Image
                                             src={
                                               picturesMap[url.picture]
                                                 .base64ImageData
@@ -439,6 +440,8 @@ export default function CategoriesManagementPage() {
                                             alt={
                                               picturesMap[url.picture].altText
                                             }
+                                            width={12}
+                                            height={12}
                                             className="w-3 h-3 rounded object-cover"
                                           />
                                         )}
@@ -622,9 +625,11 @@ export default function CategoriesManagementPage() {
                               className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg"
                             >
                               {url.picture && picturesMap[url.picture] && (
-                                <img
+                                <Image
                                   src={picturesMap[url.picture].base64ImageData}
                                   alt={picturesMap[url.picture].altText}
+                                  width={24}
+                                  height={24}
                                   className="w-6 h-6 rounded object-cover"
                                 />
                               )}

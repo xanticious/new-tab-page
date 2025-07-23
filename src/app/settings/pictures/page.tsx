@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { usePictures } from '@/hooks/useDatabase';
-import { BackToSettingsLink } from '@/components/BackToSettingsLink';
-import { FormHeader } from '@/components/shared/FormHeader';
-import { SearchBar } from '@/components/shared/SearchBar';
-import { StatsCard } from '@/components/shared/StatsCard';
-import { ImageUpload } from '@/components/pictures/ImageUpload';
-import { FaviconSelector } from '@/components/pictures/FaviconSelector';
-import { WordArt } from '@/components/pictures/WordArt';
-import { Picture, CreatePicture, UpdatePicture } from '@/types';
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { usePictures } from "@/hooks/useDatabase";
+import { BackToSettingsLink } from "@/components/BackToSettingsLink";
+import { FormHeader } from "@/components/shared/FormHeader";
+import { SearchBar } from "@/components/shared/SearchBar";
+import { StatsCard } from "@/components/shared/StatsCard";
+import { ImageUpload } from "@/components/pictures/ImageUpload";
+import { FaviconSelector } from "@/components/pictures/FaviconSelector";
+import { WordArt } from "@/components/pictures/WordArt";
+import { Picture, CreatePicture, UpdatePicture } from "@/types";
 
 // Icons
 const PhotoIcon = ({ className }: { className?: string }) => (
@@ -98,8 +99,8 @@ const EyeIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-type ViewMode = 'list' | 'create' | 'edit' | 'view';
-type PictureSource = 'upload' | 'favicon' | 'wordart';
+type ViewMode = "list" | "create" | "edit" | "view";
+type PictureSource = "upload" | "favicon" | "wordart";
 
 interface PictureFormData {
   name: string;
@@ -118,17 +119,17 @@ export default function PicturesManagementPage() {
     refresh,
   } = usePictures();
 
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [selectedPicture, setSelectedPicture] = useState<Picture | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState<PictureFormData>({
-    name: '',
-    altText: '',
-    base64ImageData: '',
+    name: "",
+    altText: "",
+    base64ImageData: "",
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pictureSource, setPictureSource] = useState<PictureSource>('upload');
+  const [pictureSource, setPictureSource] = useState<PictureSource>("upload");
 
   // Filter pictures based on search term
   const filteredPictures = pictures.filter(
@@ -139,17 +140,17 @@ export default function PicturesManagementPage() {
 
   // Reset form when view mode changes
   useEffect(() => {
-    if (viewMode === 'create') {
-      setFormData({ name: '', altText: '', base64ImageData: '' });
+    if (viewMode === "create") {
+      setFormData({ name: "", altText: "", base64ImageData: "" });
       setSelectedPicture(null);
-      setPictureSource('upload');
-    } else if (viewMode === 'edit' && selectedPicture) {
+      setPictureSource("upload");
+    } else if (viewMode === "edit" && selectedPicture) {
       setFormData({
         name: selectedPicture.name,
         altText: selectedPicture.altText,
         base64ImageData: selectedPicture.base64ImageData,
       });
-      setPictureSource('upload');
+      setPictureSource("upload");
     }
     setFormErrors({});
   }, [viewMode, selectedPicture]);
@@ -158,27 +159,27 @@ export default function PicturesManagementPage() {
     const errors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      errors.name = 'Picture name is required';
+      errors.name = "Picture name is required";
     } else if (formData.name.trim().length < 2) {
-      errors.name = 'Picture name must be at least 2 characters';
+      errors.name = "Picture name must be at least 2 characters";
     } else {
       // Check for duplicate names (excluding current picture when editing)
       const existingPicture = pictures.find(
         (picture) =>
           picture.name.toLowerCase() === formData.name.trim().toLowerCase() &&
-          (viewMode === 'create' || picture.id !== selectedPicture?.id)
+          (viewMode === "create" || picture.id !== selectedPicture?.id)
       );
       if (existingPicture) {
-        errors.name = 'A picture with this name already exists';
+        errors.name = "A picture with this name already exists";
       }
     }
 
     if (!formData.altText.trim()) {
-      errors.altText = 'Alt text is required for accessibility';
+      errors.altText = "Alt text is required for accessibility";
     }
 
     if (!formData.base64ImageData) {
-      errors.base64ImageData = 'Please select or create an image';
+      errors.base64ImageData = "Please select or create an image";
     }
 
     setFormErrors(errors);
@@ -199,18 +200,18 @@ export default function PicturesManagementPage() {
         base64ImageData: formData.base64ImageData,
       };
 
-      if (viewMode === 'create') {
+      if (viewMode === "create") {
         await createPicture(pictureData as CreatePicture);
-      } else if (viewMode === 'edit' && selectedPicture) {
+      } else if (viewMode === "edit" && selectedPicture) {
         await updatePicture({
           id: selectedPicture.id,
           ...pictureData,
         } as UpdatePicture);
       }
 
-      setViewMode('list');
+      setViewMode("list");
     } catch (err) {
-      console.error('Failed to save picture:', err);
+      console.error("Failed to save picture:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -225,7 +226,7 @@ export default function PicturesManagementPage() {
       try {
         await deletePicture(picture.id);
       } catch (err) {
-        console.error('Failed to delete picture:', err);
+        console.error("Failed to delete picture:", err);
       }
     }
   };
@@ -235,7 +236,7 @@ export default function PicturesManagementPage() {
       ...prev,
       base64ImageData: base64,
       // If name is empty and we have a filename, use it (without extension)
-      name: prev.name || (fileName ? fileName.replace(/\.[^/.]+$/, '') : ''),
+      name: prev.name || (fileName ? fileName.replace(/\.[^/.]+$/, "") : ""),
     }));
   };
 
@@ -282,9 +283,9 @@ export default function PicturesManagementPage() {
             subtitle="Manage images and icons for your URLs and bookmarks"
             icon={PhotoIcon}
             actionButton={
-              viewMode === 'list' && (
+              viewMode === "list" && (
                 <button
-                  onClick={() => setViewMode('create')}
+                  onClick={() => setViewMode("create")}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
                 >
                   <PlusIcon className="h-5 w-5" />
@@ -292,12 +293,12 @@ export default function PicturesManagementPage() {
                 </button>
               )
             }
-            onBack={viewMode !== 'list' ? () => setViewMode('list') : undefined}
+            onBack={viewMode !== "list" ? () => setViewMode("list") : undefined}
           />
 
           {/* Content */}
           <div className="p-6">
-            {viewMode === 'list' && (
+            {viewMode === "list" && (
               <div className="space-y-6">
                 {/* Search */}
                 <SearchBar
@@ -338,12 +339,12 @@ export default function PicturesManagementPage() {
                       <PhotoIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                       <div className="text-gray-500">
                         {searchTerm
-                          ? 'No pictures found matching your search.'
-                          : 'No pictures yet.'}
+                          ? "No pictures found matching your search."
+                          : "No pictures yet."}
                       </div>
                       {!searchTerm && (
                         <button
-                          onClick={() => setViewMode('create')}
+                          onClick={() => setViewMode("create")}
                           className="mt-4 text-blue-600 hover:text-blue-800 underline"
                         >
                           Add your first picture
@@ -358,9 +359,11 @@ export default function PicturesManagementPage() {
                           className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors"
                         >
                           <div className="flex items-start gap-3">
-                            <img
+                            <Image
                               src={picture.base64ImageData}
                               alt={picture.altText}
+                              width={64}
+                              height={64}
                               className="w-16 h-16 rounded border object-cover flex-shrink-0"
                             />
                             <div className="flex-1 min-w-0">
@@ -383,7 +386,7 @@ export default function PicturesManagementPage() {
                                 <button
                                   onClick={() => {
                                     setSelectedPicture(picture);
-                                    setViewMode('view');
+                                    setViewMode("view");
                                   }}
                                   className="text-blue-600 hover:text-blue-800 p-1"
                                   title="View"
@@ -395,7 +398,7 @@ export default function PicturesManagementPage() {
                                     <button
                                       onClick={() => {
                                         setSelectedPicture(picture);
-                                        setViewMode('edit');
+                                        setViewMode("edit");
                                       }}
                                       className="text-gray-600 hover:text-gray-800 p-1"
                                       title="Edit"
@@ -422,10 +425,10 @@ export default function PicturesManagementPage() {
               </div>
             )}
 
-            {(viewMode === 'create' || viewMode === 'edit') && (
+            {(viewMode === "create" || viewMode === "edit") && (
               <div className="max-w-4xl">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                  {viewMode === 'create' ? 'Add New Picture' : 'Edit Picture'}
+                  {viewMode === "create" ? "Add New Picture" : "Edit Picture"}
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -446,7 +449,7 @@ export default function PicturesManagementPage() {
                           setFormData({ ...formData, name: e.target.value })
                         }
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          formErrors.name ? 'border-red-300' : 'border-gray-300'
+                          formErrors.name ? "border-red-300" : "border-gray-300"
                         }`}
                         placeholder="e.g., Google Favicon"
                       />
@@ -473,8 +476,8 @@ export default function PicturesManagementPage() {
                         }
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                           formErrors.altText
-                            ? 'border-red-300'
-                            : 'border-gray-300'
+                            ? "border-red-300"
+                            : "border-gray-300"
                         }`}
                         placeholder="e.g., Google search engine logo"
                       />
@@ -494,24 +497,24 @@ export default function PicturesManagementPage() {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {[
                         {
-                          value: 'upload' as PictureSource,
-                          label: 'Upload File',
+                          value: "upload" as PictureSource,
+                          label: "Upload File",
                         },
                         {
-                          value: 'favicon' as PictureSource,
-                          label: 'Website Favicon',
+                          value: "favicon" as PictureSource,
+                          label: "Website Favicon",
                         },
                         {
-                          value: 'wordart' as PictureSource,
-                          label: 'Text/WordArt',
+                          value: "wordart" as PictureSource,
+                          label: "Text/WordArt",
                         },
                       ].map((option) => (
                         <label
                           key={option.value}
                           className={`border rounded-lg p-3 cursor-pointer transition-colors ${
                             pictureSource === option.value
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-300 hover:border-gray-400'
+                              ? "border-blue-500 bg-blue-50"
+                              : "border-gray-300 hover:border-gray-400"
                           }`}
                         >
                           <input
@@ -541,13 +544,13 @@ export default function PicturesManagementPage() {
 
                   {/* Picture Input Component */}
                   <div>
-                    {pictureSource === 'upload' && (
+                    {pictureSource === "upload" && (
                       <ImageUpload
                         onImageSelected={handleImageSelected}
                         currentImage={formData.base64ImageData}
                       />
                     )}
-                    {pictureSource === 'favicon' && (
+                    {pictureSource === "favicon" && (
                       <FaviconSelector
                         onFaviconSelected={(base64, size) => {
                           handleImageSelected(base64);
@@ -561,7 +564,7 @@ export default function PicturesManagementPage() {
                         }}
                       />
                     )}
-                    {pictureSource === 'wordart' && (
+                    {pictureSource === "wordart" && (
                       <WordArt
                         onImageGenerated={(base64) => {
                           handleImageSelected(base64);
@@ -570,7 +573,7 @@ export default function PicturesManagementPage() {
                             setFormData((prev) => ({
                               ...prev,
                               altText: `Generated text image: ${
-                                formData.name || 'WordArt'
+                                formData.name || "WordArt"
                               }`,
                             }));
                           }
@@ -587,14 +590,14 @@ export default function PicturesManagementPage() {
                       className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting
-                        ? 'Saving...'
-                        : viewMode === 'create'
-                        ? 'Add Picture'
-                        : 'Save Changes'}
+                        ? "Saving..."
+                        : viewMode === "create"
+                        ? "Add Picture"
+                        : "Save Changes"}
                     </button>
                     <button
                       type="button"
-                      onClick={() => setViewMode('list')}
+                      onClick={() => setViewMode("list")}
                       className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200"
                     >
                       Cancel
@@ -604,7 +607,7 @@ export default function PicturesManagementPage() {
               </div>
             )}
 
-            {viewMode === 'view' && selectedPicture && (
+            {viewMode === "view" && selectedPicture && (
               <div className="max-w-2xl">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
                   View Picture
@@ -613,9 +616,11 @@ export default function PicturesManagementPage() {
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 space-y-6">
                   {/* Picture Display */}
                   <div className="text-center">
-                    <img
+                    <Image
                       src={selectedPicture.base64ImageData}
                       alt={selectedPicture.altText}
+                      width={256}
+                      height={256}
                       className="max-w-64 max-h-64 mx-auto rounded border shadow-sm"
                     />
                   </div>
@@ -654,7 +659,7 @@ export default function PicturesManagementPage() {
                         Status
                       </label>
                       <div className="text-gray-900">
-                        {selectedPicture.readonly ? 'Readonly' : 'Editable'}
+                        {selectedPicture.readonly ? "Readonly" : "Editable"}
                       </div>
                     </div>
                   </div>
@@ -663,7 +668,7 @@ export default function PicturesManagementPage() {
                 <div className="mt-6 flex gap-3">
                   {!selectedPicture.readonly && (
                     <button
-                      onClick={() => setViewMode('edit')}
+                      onClick={() => setViewMode("edit")}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
                     >
                       <PencilIcon className="h-4 w-4" />
